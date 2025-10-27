@@ -1,0 +1,30 @@
+# Core dependencies
+aiohttp==3.9.1
+aioredis==2.0.1
+redis==5.0.1
+python-dotenv==1.0.0
+
+# Communication (removed zeromq==0.0.0 - it doesn't exist)
+pyzmq==25.1.2
+grpcio==1.60.0
+grpcio-tools==1.60.0
+
+# Data serialization
+msgpack==1.0.7
+protobuf==4.25.1
+
+# Monitoring & Metrics
+prometheus-client==0.19.0
+psutil==5.9.6
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+locust==2.20.0
+
+# Logging
+colorlog==6.8.0
+
+# Utilities
+pyyaml==6.0.1

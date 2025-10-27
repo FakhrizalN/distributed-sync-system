@@ -1,0 +1,379 @@
+openapi: 3.0.3
+info:
+  title: Distributed Synchronization System API
+  description: API specification for distributed lock, queue, and cache system
+  version: 1.0.0
+  contact:
+    name: Your Name
+    email: your-email@example.com
+
+servers:
+  - url: http://localhost:5000
+    description: Node 1
+  - url: http://localhost:5001
+    description: Node 2
+  - url: http://localhost:5002
+    description: Node 3
+
+paths:
+  /health:
+    get:
+      summary: Health check endpoint
+      responses:
+        '200':
+          description: Node is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  node_id:
+                    type: string
+                  role:
+                    type: string
+                    enum: [leader, follower, candidate]
+
+  /status:
+    get:
+      summary: Get node status
+      responses:
+        '200':
+          description: Node status information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NodeStatus'
+
+  /lock/acquire:
+    post:
+      summary: Acquire distributed lock
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - lock_id
+              properties:
+                lock_id:
+                  type: string
+                lock_type:
+                  type: string
+                  enum: [shared, exclusive]
+                  default: exclusive
+                timeout:
+                  type: integer
+                  default: 30
+      responses:
+        '200':
+          description: Lock acquired successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  lock_id:
+                    type: string
+        '408':
+          description: Lock acquisition timeout
+        '409':
+          description: Lock conflict detected
+
+  /lock/release:
+    post:
+      summary: Release distributed lock
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - lock_id
+              properties:
+                lock_id:
+                  type: string
+      responses:
+        '200':
+          description: Lock released successfully
+        '404':
+          description: Lock not found
+
+  /lock/status:
+    get:
+      summary: Get lock status
+      responses:
+        '200':
+          description: Lock status information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LockStatus'
+
+  /queue/enqueue:
+    post:
+      summary: Enqueue message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - queue_name
+                - data
+              properties:
+                queue_name:
+                  type: string
+                data:
+                  type: object
+      responses:
+        '200':
+          description: Message enqueued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  msg_id:
+                    type: string
+
+  /queue/dequeue:
+    post:
+      summary: Dequeue message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - queue_name
+              properties:
+                queue_name:
+                  type: string
+                timeout:
+                  type: integer
+                  default: 10
+      responses:
+        '200':
+          description: Message dequeued successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueMessage'
+        '204':
+          description: No message available
+
+  /queue/acknowledge:
+    post:
+      summary: Acknowledge message processing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - msg_id
+              properties:
+                msg_id:
+                  type: string
+      responses:
+        '200':
+          description: Message acknowledged
+        '404':
+          description: Message not found
+
+  /queue/stats:
+    get:
+      summary: Get queue statistics
+      responses:
+        '200':
+          description: Queue statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueStats'
+
+  /cache/get:
+    post:
+      summary: Get value from cache
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - key
+              properties:
+                key:
+                  type: string
+      responses:
+        '200':
+          description: Value found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  found:
+                    type: boolean
+                  value:
+                    type: object
+        '404':
+          description: Key not found
+
+  /cache/put:
+    post:
+      summary: Put value in cache
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - key
+                - value
+              properties:
+                key:
+                  type: string
+                value:
+                  type: object
+      responses:
+        '200':
+          description: Value cached successfully
+
+  /cache/invalidate:
+    post:
+      summary: Invalidate cache entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - key
+              properties:
+                key:
+                  type: string
+      responses:
+        '200':
+          description: Cache invalidated
+
+  /cache/stats:
+    get:
+      summary: Get cache statistics
+      responses:
+        '200':
+          description: Cache statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CacheStats'
+
+  /metrics:
+    get:
+      summary: Prometheus metrics endpoint
+      responses:
+        '200':
+          description: Prometheus metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+
+components:
+  schemas:
+    NodeStatus:
+      type: object
+      properties:
+        node_id:
+          type: string
+        host:
+          type: string
+        port:
+          type: integer
+        raft:
+          type: object
+          properties:
+            role:
+              type: string
+            term:
+              type: integer
+            log_length:
+              type: integer
+            commit_index:
+              type: integer
+        failure_detector:
+          type: object
+        state_machine_size:
+          type: integer
+        connected_nodes:
+          type: integer
+
+    LockStatus:
+      type: object
+      properties:
+        total_locks:
+          type: integer
+        locks:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              type:
+                type: string
+              holders:
+                type: array
+                items:
+                  type: string
+              waiters:
+                type: integer
+
+    QueueMessage:
+      type: object
+      properties:
+        msg_id:
+          type: string
+        data:
+          type: object
+        timestamp:
+          type: number
+
+    QueueStats:
+      type: object
+      properties:
+        queues:
+          type: object
+        in_flight_count:
+          type: integer
+        dlq_count:
+          type: integer
+
+    CacheStats:
+      type: object
+      properties:
+        size:
+          type: integer
+        capacity:
+          type: integer
+        hits:
+          type: integer
+        misses:
+          type: integer
+        hit_rate:
+          type: string
+        evictions:
+          type: integer
