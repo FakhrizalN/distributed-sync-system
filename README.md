@@ -6,7 +6,7 @@
 
 Sistem terdistribusi yang mengimplementasikan Raft consensus, distributed locking, distributed queue, dan distributed cache dengan MESI coherence protocol.
 
-## 📋 Daftar Isi
+## Daftar Isi
 
 - [Features](#features)
 - [Arsitektur](#arsitektur)
@@ -17,37 +17,37 @@ Sistem terdistribusi yang mengimplementasikan Raft consensus, distributed lockin
 - [Dokumentasi](#dokumentasi)
 - [Video Demo](#video-demo)
 
-## ✨ Features
+## Features
 
 ### Core Features (Wajib)
 
 1. **Distributed Lock Manager (25 poin)**
-   - ✅ Raft Consensus Algorithm untuk koordinasi
-   - ✅ Shared dan Exclusive Locks
-   - ✅ Deadlock Detection menggunakan wait-for graph
-   - ✅ Network partition handling
+   - Raft Consensus Algorithm untuk koordinasi
+   - Shared dan Exclusive Locks
+   - Deadlock Detection menggunakan wait-for graph
+   - Network partition handling
 
 2. **Distributed Queue System (20 poin)**
-   - ✅ Consistent Hashing untuk distribusi message
-   - ✅ Multiple producers dan consumers
-   - ✅ Message persistence dan recovery
-   - ✅ At-least-once delivery guarantee
-   - ✅ Dead Letter Queue (DLQ) untuk failed messages
+   - Consistent Hashing untuk distribusi message
+   - Multiple producers dan consumers
+   - Message persistence dan recovery
+   - At-least-once delivery guarantee
+   - Dead Letter Queue (DLQ) untuk failed messages
 
 3. **Distributed Cache Coherence (15 poin)**
-   - ✅ MESI Protocol implementation
-   - ✅ Multiple cache nodes
-   - ✅ Cache invalidation dan update propagation
-   - ✅ LRU replacement policy
-   - ✅ Performance metrics collection
+   - MESI Protocol implementation
+   - Multiple cache nodes
+   - Cache invalidation dan update propagation
+   - LRU replacement policy
+   - Performance metrics collection
 
 4. **Containerization (10 poin)**
-   - ✅ Dockerfile untuk setiap komponen
-   - ✅ Docker Compose untuk orchestration
-   - ✅ Dynamic node scaling
-   - ✅ Environment configuration via .env
+   - Dockerfile untuk setiap komponen
+   - Docker Compose untuk orchestration
+   - Dynamic node scaling
+   - Environment configuration via .env
 
-## 🏗️ Arsitektur
+## Arsitektur
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -74,7 +74,7 @@ Sistem terdistribusi yang mengimplementasikan Raft consensus, distributed lockin
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 📦 Prerequisites
+## Prerequisites
 
 - Python 3.8+
 - Docker dan Docker Compose
@@ -82,7 +82,7 @@ Sistem terdistribusi yang mengimplementasikan Raft consensus, distributed lockin
 - 4GB RAM minimum
 - Linux/macOS/Windows dengan WSL2
 
-## 🚀 Instalasi
+## Instalasi
 
 ### 1. Clone Repository
 
@@ -106,9 +106,9 @@ cp .env.example .env
 # Edit .env sesuai kebutuhan
 ```
 
-## 🎯 Menjalankan Sistem
+## Menjalankan Sistem
 
-### Cara Paling Mudah: Docker Compose (Recommended)
+### Docker Compose
 
 ```bash
 # Build dan jalankan semua nodes
@@ -124,45 +124,9 @@ docker-compose logs -f
 docker-compose down
 ```
 
-### Tanpa Script (.bat/.sh): Lihat [MANUAL_SETUP.md](MANUAL_SETUP.md)
-
-**PowerShell (Windows):**
-```powershell
-# Option 1: Docker (Paling Mudah)
-docker-compose up
-
-# Option 2: Manual Python
-# Terminal 1 - Node 1
-$env:NODE_ID="node1"; $env:NODE_PORT="5000"; $env:CLUSTER_NODES="node1:5000,node2:5001,node3:5002"
-python -m src.main
-
-# Terminal 2 - Node 2
-$env:NODE_ID="node2"; $env:NODE_PORT="5001"; $env:CLUSTER_NODES="node1:5000,node2:5001,node3:5002"
-python -m src.main
-
-# Terminal 3 - Node 3
-$env:NODE_ID="node3"; $env:NODE_PORT="5002"; $env:CLUSTER_NODES="node1:5000,node2:5001,node3:5002"
-python -m src.main
-```
-
-**Bash (Linux/Mac):**
-```bash
-# Terminal 1 - Node 1
-export NODE_ID=node1 NODE_PORT=5000 CLUSTER_NODES=node1:5000,node2:5001,node3:5002
-python -m src.main
-
-# Terminal 2 - Node 2
-export NODE_ID=node2 NODE_PORT=5001 CLUSTER_NODES=node1:5000,node2:5001,node3:5002
-python -m src.main
-
-# Terminal 3 - Node 3
-export NODE_ID=node3 NODE_PORT=5002 CLUSTER_NODES=node1:5000,node2:5001,node3:5002
-python -m src.main
-```
-
 📘 **Panduan Lengkap**: Lihat [MANUAL_SETUP.md](MANUAL_SETUP.md) untuk step-by-step tanpa script
 
-## 🧪 Testing
+## Testing
 
 ### Unit Tests
 
@@ -188,7 +152,7 @@ locust -f benchmarks/load_test_scenarios.py --host=http://localhost:5000
 pytest --cov=src --cov-report=html
 ```
 
-## 📊 Monitoring
+## Monitoring
 
 ### Prometheus Metrics
 
@@ -205,7 +169,7 @@ Metrics tersedia di:
 - **Cache Metrics**: Hits, misses, evictions, hit rate
 - **System Metrics**: CPU, memory, disk usage
 
-## 📖 Dokumentasi
+## Dokumentasi
 
 Dokumentasi lengkap tersedia di folder `docs/`:
 
@@ -213,17 +177,11 @@ Dokumentasi lengkap tersedia di folder `docs/`:
 - [API Specification](docs/api_spec.yaml)
 - [Deployment Guide](docs/deployment_guide.md)
 
-## 🎥 Video Demo
+## Video Demo
 
 **Link YouTube**: [WILL BE UPDATED]
 
-Video mencakup:
-1. Penjelasan arsitektur sistem (2-3 menit)
-2. Live demo semua fitur (5-7 menit)
-3. Performance testing (2-3 menit)
-4. Failure scenarios (1-2 menit)
-
-## 🏆 Performance Results
+## Performance Results
 
 ### Throughput
 - Lock operations: ~1000 ops/sec per node
@@ -240,7 +198,7 @@ Video mencakup:
 - Linear scalability for read operations
 - Consensus overhead: ~20% for write operations
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Node tidak bisa connect
 ```bash
@@ -260,30 +218,7 @@ docker network inspect distributed-net
 # Docker Desktop > Settings > Resources > Memory
 ```
 
-## 👥 Author
+## Author
 
-**Nama**: [Your Name]
-**NIM**: [Your NIM]
-**Email**: [Your Email]
-
-## 📄 License
-
-MIT License - lihat [LICENSE](LICENSE) file untuk detail
-
-## 🙏 Acknowledgments
-
-- Raft Consensus Algorithm - Diego Ongaro & John Ousterhout
-- Distributed Systems: Principles and Paradigms - Tanenbaum & Van Steen
-- Redis distributed patterns
-- Python asyncio community
-
-## 📞 Support
-
-Jika ada pertanyaan:
-- Open issue di GitHub
-- Email: [your-email]
-- Discord: [your-discord]
-
----
-
-**Built with ❤️ for Distributed Systems Course**
+**Nama**: Fakhrizal Naufal
+**NIM**: 11221057
