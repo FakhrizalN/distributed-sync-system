@@ -124,8 +124,6 @@ docker-compose logs -f
 docker-compose down
 ```
 
-📘 **Panduan Lengkap**: Lihat [MANUAL_SETUP.md](MANUAL_SETUP.md) untuk step-by-step tanpa script
-
 ## Testing
 
 ### Unit Tests
